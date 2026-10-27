@@ -2,15 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Tienda Online</title>
+    <title>Vivero BOOM - Tienda Online</title>
     <style>
         /* 1. Color de fondo y estilo general de la página */
         body {
-            background-color: #f4f6f9; /* Un gris suave y moderno */
+            background-color: #f5f2eb; /* marfil calido */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
             color: #333;
+        }
+
+        /* Estilo para el título de bienvenida */
+        .header-titulo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header-titulo h1 {
+            color: #2e7d32; /* Un verde acorde a un vivero */
+            margin-bottom: 5px;
+        }
+        .header-titulo p {
+            color: #555;
+            font-size: 16px;
+            margin-top: 0;
         }
 
         /* Estilo para centrar y dimensionar el Logo */
@@ -21,6 +36,7 @@
         .header-logo img {
             max-width: 180px; /* Ancho máximo del logo */
             height: auto;
+            border-radius: 8px;
         }
 
         /* Estilo para el buscador */
@@ -56,6 +72,12 @@
         <img src="https://sjmhkogomjsazhhhaovz.supabase.co/storage/v1/object/public/fotos/Logo.jpg" alt="Logo de mi negocio">
     </div>
 
+    <!-- Título y subtítulo del Vivero -->
+    <div class="header-titulo">
+        <h1>Vivero BOOM</h1>
+        <p>¡Promociones por semana de inauguración!</p>
+    </div>
+
     <!-- Campo de Búsqueda -->
     <div class="buscador-container">
         <input type="text" id="buscador" placeholder="🔍 Buscar producto por nombre..." onkeyup="filtrarProductos()">
@@ -67,35 +89,20 @@
     <!-- Cargar la librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ... (aquí sigue tu código de conexión y funciones)
-    </script>
-</body>
-</html>
-    <h1>Vivero BOOM </h1>
-    <p>Promociones por semana de inauguración!</p>
-        
-    <!-- Aquí mostraremos los productos -->
-    <div id="lista-productos">Cargando productos...</div>
+        // Variable global para guardar todos los productos originales
+        let todosLosProductos = [];
 
-    <!-- Cargamos la librería oficial de Supabase para JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script>
-        // 1. Configura tus credenciales de Supabase (las que guardaste en el Paso 1)
-        const SUPABASE_URL = 'https://sjmhkogomjsazhhhaovz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_90Sc2W2b1Sedd1Lf5uN1SQ_Nr4o__DR';
-
+        const SUPABASE_URL = "https://sjmhkogomjsazhhhaovz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_90Sc2W2b1Sedd1Lf5uN1SQ_Nr4o__DR"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 2. Función para ir a buscar los productos a la base de datos
-      async function cargarProductos() {
+        async function cargarProductos() {
             const contenedor = document.getElementById('lista-productos');
             
-            // Consultamos la tabla "productos" y agregamos .order()
             const { data, error } = await supabaseClient
                 .from('productos')
                 .select('*')
-                .order('nombre', { ascending: true }); // <-- AQUÍ ESTÁ EL ORDENAMIENTO
+                .order('nombre', { ascending: true }); // Ordenados alfabéticamente
 
             if (error) {
                 contenedor.innerHTML = 'Error al cargar los productos.';
@@ -103,35 +110,43 @@
                 return;
             }
 
-            if (data.length === 0) {
-                contenedor.innerHTML = 'No hay productos cargados todavía.';
+            todosLosProductos = data;
+            mostrarProductos(todosLosProductos);
+        }
+
+        function mostrarProductos(productosAMostrar) {
+            const contenedor = document.getElementById('lista-productos');
+            contenedor.innerHTML = '';
+
+            if (productosAMostrar.length === 0) {
+                contenedor.innerHTML = '<p style="text-align: center;">No se encontraron productos.</p>';
                 return;
             }
 
-            // ... (el resto del código para dibujar las tarjetas sigue igual)
-            // 3. Dibujamos los productos en la pantalla
-            contenedor.innerHTML = '';
-            data.forEach(prod => {
-                // Si el producto tiene foto la muestra, si no, muestra un espacio o nada
+            productosAMostrar.forEach(prod => {
                 let imagenHtml = prod.imagen_url 
-                    ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">` 
+                    ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; display: block;">` 
                     : '';
 
                 contenedor.innerHTML += `
-                    <div class="producto-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 6px; background: #f9f9f9;">
+                    <div class="producto-card">
                         ${imagenHtml}
-                        <h3>${prod.nombre}</h3>
-                        <p class="precio">Precio: $${prod.precio}</p>
-                        <p>Stock disponible: ${prod.stock}</p>
-                        <button onclick="comprar('${prod.nombre}')">Comprar / Consultar</button>
+                        <h3 style="margin: 0 0 8px 0;">${prod.nombre}</h3>
+                        <p style="margin: 4px 0; color: #2e7d32; font-weight: bold;">Precio: $${prod.precio}</p>
+                        <p style="margin: 4px 0; color: #666;">Stock disponible: ${prod.stock}</p>
                     </div>
                 `;
             });
         }
 
-        // Simulación de compra sin pasarela (por ejemplo, vía WhatsApp)
-        function comprar(nombreProducto) {
-            alert('¡Genial! Quisieras comprar: ' + nombreProducto + '. (Aquí puedes abrir un enlace de WhatsApp con el pedido).');
+        function filtrarProductos() {
+            let textoBusqueda = document.getElementById('buscador').value.toLowerCase();
+            
+            let productosFiltrados = todosLosProductos.filter(prod => 
+                prod.nombre.toLowerCase().includes(textoBusqueda)
+            );
+
+            mostrarProductos(productosFiltrados);
         }
 
         // Ejecutar al cargar la página
