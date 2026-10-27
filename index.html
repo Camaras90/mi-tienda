@@ -31,15 +31,15 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // 2. Función para ir a buscar los productos a la base de datos
-        async function cargarProductos() {
+      async function cargarProductos() {
             const contenedor = document.getElementById('lista-productos');
             
-            // Consultamos la tabla "productos"
+            // Consultamos la tabla "productos" y agregamos .order()
             const { data, error } = await supabaseClient
                 .from('productos')
-                .select('*');
-                .order('id', { ascending: true }); // <-- AQUÍ ESTÁ EL ORDENAMIENTO
- 
+                .select('*')
+                .order('nombre', { ascending: true }); // <-- AQUÍ ESTÁ EL ORDENAMIENTO
+
             if (error) {
                 contenedor.innerHTML = 'Error al cargar los productos.';
                 console.error(error);
@@ -51,6 +51,7 @@
                 return;
             }
 
+            // ... (el resto del código para dibujar las tarjetas sigue igual)
             // 3. Dibujamos los productos en la pantalla
             contenedor.innerHTML = '';
             data.forEach(prod => {
