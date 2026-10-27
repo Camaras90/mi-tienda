@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Tienda de Prueba</title>
+    <!-- Estilos sencillos para que se vea ordenada -->
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #2c3e50; }
+        .producto-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 6px; background: #f9f9f9; }
+        .precio { font-weight: bold; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <h1>Catálogo de Productos</h1>
+    <p>Estos productos se cargan en tiempo real desde la nube mediante una API.</p>
+    
+    <!-- Aquí mostraremos los productos -->
+    <div id="lista-productos">Cargando productos...</div>
+
+    <!-- Cargamos la librería oficial de Supabase para JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // 1. Configura tus credenciales de Supabase (las que guardaste en el Paso 1)
+        const SUPABASE_URL = 'https://sjmhkogomjsazhhhaovz.supabase.co/rest/v1/';
+        const SUPABASE_ANON_KEY = 'sb_publishable_90Sc2W2b1Sedd1Lf5uN1SQ_Nr4o__DR';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 2. Función para ir a buscar los productos a la base de datos
+        async function cargarProductos() {
+            const contenedor = document.getElementById('lista-productos');
+            
+            // Consultamos la tabla "productos"
+            const { data, error } = await supabaseClient
+                .from('productos')
+                .select('*');
+
+            if (error) {
+                contenedor.innerHTML = 'Error al cargar los productos.';
+                console.error(error);
+                return;
+            }
+
+            if (data.length === 0) {
+                contenedor.innerHTML = 'No hay productos cargados todavía.';
+                return;
+            }
+
+            // 3. Dibujamos los productos en la pantalla
+            contenedor.innerHTML = '';
+            data.forEach(prod => {
+                contenedor.innerHTML += `
+                    <div class="producto-card">
+                        <h3>${prod.nombre}</h3>
+                        <p class="precio">Precio: $${prod.precio}</p>
+                        <p>Stock disponible: ${prod.stock}</p>
+                        <button onclick="comprar('${prod.nombre}')">Comprar / Consultar</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Simulación de compra sin pasarela (por ejemplo, vía WhatsApp)
+        function comprar(nombreProducto) {
+            alert('¡Genial! Quisieras comprar: ' + nombreProducto + '. (Aquí puedes abrir un enlace de WhatsApp con el pedido).');
+        }
+
+        // Ejecutar al cargar la página
+        cargarProductos();
+    </script>
+</body>
+</html>
