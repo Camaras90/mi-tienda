@@ -2,21 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda de Prueba</title>
-    <!-- Estilos sencillos para que se vea ordenada -->
+    <title>Mi Tienda Online</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
-        h1 { color: #2c3e50; }
-        .producto-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 6px; background: #f9f9f9; }
-        .precio { font-weight: bold; color: #27ae60; }
+        /* 1. Color de fondo y estilo general de la página */
+        body {
+            background-color: #f4f6f9; /* Un gris suave y moderno */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Estilo para centrar y dimensionar el Logo */
+        .header-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header-logo img {
+            max-width: 180px; /* Ancho máximo del logo */
+            height: auto;
+        }
+
+        /* Estilo para el buscador */
+        .buscador-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .buscador-container input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        /* Estilo para las tarjetas de productos */
+        .producto-card {
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
 
-    <h1>Catálogo de Productos del ViveroVale </h1>
-    //<p>Estos productos se cargan en tiempo real desde la nube mediante una API.</p>
-    
+    <!-- Logo en el inicio de la página -->
+    <div class="header-logo">
+        <img src="AQUÍ_PEGAS_EL_ENLACE_DE_TU_LOGO_EN_SUPABASE" alt="Logo de mi negocio">
+    </div>
+
+    <!-- Campo de Búsqueda -->
+    <div class="buscador-container">
+        <input type="text" id="buscador" placeholder="🔍 Buscar producto por nombre..." onkeyup="filtrarProductos()">
+    </div>
+
+    <!-- Contenedor donde se cargarán los productos -->
+    <div id="lista-productos" style="max-width: 600px; margin: 0 auto;"></div>
+
+    <!-- Cargar la librería de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ... (aquí sigue tu código de conexión y funciones)
+    </script>
+</body>
+</html>
+    <h1>Vivero BOOM </h1>
+    <p>Promociones por semana de inauguración!</p>
+        
     <!-- Aquí mostraremos los productos -->
     <div id="lista-productos">Cargando productos...</div>
 
