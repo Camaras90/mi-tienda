@@ -53,6 +53,10 @@
             // 3. Dibujamos los productos en la pantalla
             contenedor.innerHTML = '';
             data.forEach(prod => {
+               // Si el producto tiene foto la muestra, si no, muestra un espacio o nada
+                let imagenHtml = prod.imagen_url 
+                    ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">` 
+                    : '';
                 contenedor.innerHTML += `
                     <div class="producto-card">
                         <h3>${prod.nombre}</h3>
