@@ -38,7 +38,8 @@
             const { data, error } = await supabaseClient
                 .from('productos')
                 .select('*');
-
+                .order('id', { ascending: true }); // <-- AQUÍ ESTÁ EL ORDENAMIENTO
+ 
             if (error) {
                 contenedor.innerHTML = 'Error al cargar los productos.';
                 console.error(error);
