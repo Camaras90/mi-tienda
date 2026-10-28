@@ -128,12 +128,22 @@
                     ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; display: block;">` 
                     : '';
 
+                
+                let numeroWhatsApp = "5492395412707"; 
+                let mensajeWp = encodeURIComponent(`Hola! Quiero reservar el producto: *${prod.nombre}* (Precio: $${prod.precio})`);
+                let linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeWp}`;
+
                 contenedor.innerHTML += `
                     <div class="producto-card">
                         ${imagenHtml}
                         <h3 style="margin: 0 0 8px 0;">${prod.nombre}</h3>
                         <p style="margin: 4px 0; color: #2e7d32; font-weight: bold;">Precio: $${prod.precio}</p>
-                        <p style="margin: 4px 0; color: #666;">Stock disponible: ${prod.stock}</p>
+                        <p style="margin: 4px 0 6px 0; color: #666; font-size: 14px;">Stock disponible: ${prod.stock}</p>
+                        
+                        <!-- Botón de WhatsApp -->
+                        <a href="${linkWhatsApp}" target="_blank" style="display: inline-block; background-color: #25d366; color: white; padding: 8px 14px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold; margin-top: 8px;">
+                            💬 Reservar por WhatsApp
+                        </a>
                     </div>
                 `;
             });
