@@ -57,13 +57,42 @@
         /* Estilo para las tarjetas de productos */
         .producto-card {
             background: #f5f2eb;
-			max-width: 400px;     /* Ancho máximo de la tarjeta */
-			margin: 0 auto 12px auto; /* Centra la tarjeta si es más angosta que la pantalla */	
+            max-width: 400px;     /* Ancho máximo de la tarjeta */
+            margin: 0 auto 12px auto; /* Centra la tarjeta si es más angosta que la pantalla */    
             border: 1px solid #e1e4e8;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
+        /* Estilos para la ventana de Zoom de la imagen */
+        #modal-imagen {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            text-align: center;
+            padding-top: 60px;
+        }
+        #modal-imagen img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        #modal-imagen span {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }        
     </style>
 </head>
 <body>
@@ -76,7 +105,7 @@
     <!-- Título y subtítulo del Vivero -->
     <div class="header-titulo">
         <h1>Bienvenido a Bloom, tu vivero</h1>
-        <p>con domicilio en Carlos Casares </p>
+        <p>con domicilio en Carlos Casares</p>
     </div>
 
     <!-- Campo de Búsqueda -->
@@ -126,14 +155,13 @@
 
             productosAMostrar.forEach(prod => {
                 let imagenHtml = prod.imagen_url 
-                    ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; display: block;">` 
+                    ? `<img src="${prod.imagen_url}" alt="${prod.nombre}" onclick="abrirZoom('${prod.imagen_url}')" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; display: block; cursor: pointer;" title="Haz clic para hacer zoom">` 
                     : '';
-
                 
                 let numeroWhatsApp = "5492395412707"; 
                 let mensajeWp = encodeURIComponent(`Hola Vivero Bloom! Quiero reservar el producto: *${prod.nombre}* (Precio: $${prod.precio})`);
                 let linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeWp}`;
-
+                
                 contenedor.innerHTML += `
                     <div class="producto-card">
                         ${imagenHtml}
@@ -149,7 +177,7 @@
                 `;
             });
         }
-
+        
         function filtrarProductos() {
             let textoBusqueda = document.getElementById('buscador').value.toLowerCase();
             
@@ -160,8 +188,26 @@
             mostrarProductos(productosFiltrados);
         }
 
+        function abrirZoom(urlImagen) {
+            const modal = document.getElementById('modal-imagen');
+            const imgAmpliada = document.getElementById('img-zoom-ampliada');
+            imgAmpliada.src = urlImagen;
+            modal.style.display = "block";
+        }
+
+        function cerrarZoom() {
+            const modal = document.getElementById('modal-imagen');
+            modal.style.display = "none";
+        }
+        
         // Ejecutar al cargar la página
         cargarProductos();
     </script>
+
+    <!-- Ventana emergente para el Zoom -->
+    <div id="modal-imagen" onclick="cerrarZoom()">
+        <span onclick="cerrarZoom()">&times;</span>
+        <img id="img-zoom-ampliada" src="" alt="Imagen ampliada">
+    </div>
 </body>
 </html>
